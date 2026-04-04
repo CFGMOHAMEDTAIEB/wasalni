@@ -18,7 +18,7 @@ git init
 git add .
 git commit -m "WASALNI - Ready for production deployment"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/wasalni.git
+git remote add origin https://github.com/CFGMOHAMEDTAIEB/wasalni.git
 git push -u origin main
 ```
 
@@ -38,6 +38,7 @@ git push -u origin main
    - Runtime: Node.js
    - Build Command: `npm install && npm run build`
    - Start Command: `npm start`
+   - Instance Type: Free
 
 6. **Add Environment Variables:**
 ```

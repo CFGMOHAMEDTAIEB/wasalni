@@ -1,21 +1,27 @@
 import { Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import User from "../models/User.js";
 import { AuthRequest } from "../middleware/auth.js";
 
 const generateToken = (userId: string, email: string, role: string) => {
+  const options: SignOptions = {
+    expiresIn: (process.env.JWT_EXPIRY || "7d") as string | number
+  };
   return jwt.sign(
     { id: userId, email, role },
-    process.env.JWT_SECRET || "secret",
-    { expiresIn: process.env.JWT_EXPIRY || "7d" }
+    (process.env.JWT_SECRET || "secret") as string,
+    options
   );
 };
 
 const generateRefreshToken = (userId: string) => {
+  const options: SignOptions = {
+    expiresIn: (process.env.JWT_REFRESH_EXPIRY || "30d") as string | number
+  };
   return jwt.sign(
     { id: userId },
-    process.env.JWT_REFRESH_SECRET || "refresh_secret",
-    { expiresIn: process.env.JWT_REFRESH_EXPIRY || "30d" }
+    (process.env.JWT_REFRESH_SECRET || "refresh_secret") as string,
+    options
   );
 };
 
