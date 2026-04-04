@@ -1,0 +1,77 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production build
+dist/
+build/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+.cache/
+.parcel-cache
+.next/
+out/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.prettierignore
+.eslintignore
+
+# Lock files (optional - remove for better reproducibility)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Database
+*.sqlite
+*.db
+
+# Uploads and temp storage
+uploads/
+temp/
+tmp/
+
+# Local development
+.env.development.local
+.env.test.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Vite
+.vite/
