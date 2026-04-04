@@ -1,5 +1,4 @@
 {
-  "rootDirectory": "Cross-platform ride-sharing app",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "env": {
