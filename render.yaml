@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: wasalni-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        value: mongodb+srv://taiebmohamed_db_user:6hYCiCBVByjoQFTf@cluster0.ycqw9dq.mongodb.net/wasalni?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: wasalni_prod_jwt_secret_2024_change_me
+      - key: JWT_REFRESH_SECRET
+        value: wasalni_prod_refresh_secret_2024_change_me
+      - key: FRONTEND_URL
+        value: https://wasalni.vercel.app
+      - key: EMAIL_USER
+        value: your_email@gmail.com
+      - key: EMAIL_PASSWORD
+        value: your_app_password
+      - key: CLOUDINARY_NAME
+        value: your_cloudinary_name
+      - key: CLOUDINARY_API_KEY
+        value: your_api_key
+      - key: CLOUDINARY_API_SECRET
+        value: your_api_secret
