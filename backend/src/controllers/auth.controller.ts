@@ -1,22 +1,27 @@
 import { Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
+import crypto from "crypto";
 import User from "../models/User.js";
 import { AuthRequest } from "../middleware/auth.js";
 
-const generateToken = (userId: string, email: string, role: string) => {
+const generateToken = (userId: string, email: string, role: string): string => {
+  const secret: Secret = process.env.JWT_SECRET || "secret";
+  const expiresIn = process.env.JWT_EXPIRY || "7d";
   return jwt.sign(
     { id: userId, email, role },
-    process.env.JWT_SECRET || "secret",
-    { expiresIn: process.env.JWT_EXPIRY || "7d" }
-  ) as string;
+    secret,
+    { expiresIn }
+  );
 };
 
-const generateRefreshToken = (userId: string) => {
+const generateRefreshToken = (userId: string): string => {
+  const secret: Secret = process.env.JWT_REFRESH_SECRET || "refresh_secret";
+  const expiresIn = process.env.JWT_REFRESH_EXPIRY || "30d";
   return jwt.sign(
     { id: userId },
-    process.env.JWT_REFRESH_SECRET || "refresh_secret",
-    { expiresIn: process.env.JWT_REFRESH_EXPIRY || "30d" }
-  ) as string;
+    secret,
+    { expiresIn }
+  );
 };
 
 export const register = async (req: AuthRequest, res: Response) => {
@@ -169,7 +174,6 @@ const generateOTP = (): string => {
 
 // Hash OTP for storage
 const hashOTP = (otp: string): string => {
-  const crypto = require('crypto');
   return crypto.createHash('sha256').update(otp).digest('hex');
 };
 
@@ -254,10 +258,7 @@ export const resetPassword = async (req: AuthRequest, res: Response) => {
     }
 
     // Verify OTP
-    const hashedOTP = (() => {
-      const crypto = require('crypto');
-      return crypto.createHash('sha256').update(otp).digest('hex');
-    })();
+    const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
 
     if (!user.passwordResetToken || user.passwordResetToken !== hashedOTP) {
       return res.status(400).json({ message: "Invalid or expired code" });
