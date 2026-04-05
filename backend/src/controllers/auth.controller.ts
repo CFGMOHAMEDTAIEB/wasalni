@@ -1,27 +1,23 @@
 import { Response } from "express";
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import crypto from "crypto";
 import User from "../models/User.js";
 import { AuthRequest } from "../middleware/auth.js";
 
 const generateToken = (userId: string, email: string, role: string): string => {
-  const secret: Secret = process.env.JWT_SECRET || "secret";
-  const expiresIn = process.env.JWT_EXPIRY || "7d";
-  return jwt.sign(
-    { id: userId, email, role },
-    secret,
-    { expiresIn }
-  );
+  const secret: Secret = (process.env.JWT_SECRET || "secret") as Secret;
+  const expiryTime = (process.env.JWT_EXPIRY || "7d") as string;
+  // @ts-ignore - Known jwt.sign typing issue with environment variables
+  const options: SignOptions = { expiresIn: expiryTime };
+  return jwt.sign({ id: userId, email, role }, secret, options);
 };
 
 const generateRefreshToken = (userId: string): string => {
-  const secret: Secret = process.env.JWT_REFRESH_SECRET || "refresh_secret";
-  const expiresIn = process.env.JWT_REFRESH_EXPIRY || "30d";
-  return jwt.sign(
-    { id: userId },
-    secret,
-    { expiresIn }
-  );
+  const secret: Secret = (process.env.JWT_REFRESH_SECRET || "refresh_secret") as Secret;
+  const expiryTime = (process.env.JWT_REFRESH_EXPIRY || "30d") as string;
+  // @ts-ignore - Known jwt.sign typing issue with environment variables
+  const options: SignOptions = { expiresIn: expiryTime };
+  return jwt.sign({ id: userId }, secret, options);
 };
 
 export const register = async (req: AuthRequest, res: Response) => {
