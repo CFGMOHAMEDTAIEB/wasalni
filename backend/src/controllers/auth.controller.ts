@@ -161,3 +161,124 @@ export const refreshToken = async (req: AuthRequest, res: Response) => {
     res.status(401).json({ message: "Invalid refresh token", error: error.message });
   }
 };
+
+// Generate 6-digit OTP
+const generateOTP = (): string => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Hash OTP for storage
+const hashOTP = (otp: string): string => {
+  const crypto = require('crypto');
+  return crypto.createHash('sha256').update(otp).digest('hex');
+};
+
+export const checkEmailExists = async (req: AuthRequest, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await User.findOne({ email });
+    
+    res.json({
+      exists: !!user,
+      message: user ? "Email already registered" : "Email is available",
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: "Email check failed", error: error.message });
+  }
+};
+
+export const requestPasswordReset = async (req: AuthRequest, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      // Security: don't reveal if email exists
+      return res.json({ 
+        message: "Si cet email existe, vous recevrez un lien de réinitialisation" 
+      });
+    }
+
+    // Generate OTP
+    const otp = generateOTP();
+    const hashedOTP = hashOTP(otp);
+    const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    // Save OTP to user
+    user.passwordResetToken = hashedOTP;
+    user.passwordResetExpires = otpExpiry;
+    await user.save();
+
+    // Send email
+    const emailService = (await import("../services/email.js")).default;
+    await emailService.sendPasswordResetEmail(email, otp, user.name);
+
+    res.json({ 
+      message: "Code de réinitialisation envoyé par email",
+      // Don't expose OTP in response; frontend just confirms email was sent
+    });
+  } catch (error: any) {
+    console.error("Password reset request error:", error);
+    res.status(500).json({ message: "Error processing request", error: error.message });
+  }
+};
+
+export const resetPassword = async (req: AuthRequest, res: Response) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ 
+        message: "Email, OTP, and new password are required" 
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ 
+        message: "Password must be at least 6 characters" 
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Verify OTP
+    const hashedOTP = (() => {
+      const crypto = require('crypto');
+      return crypto.createHash('sha256').update(otp).digest('hex');
+    })();
+
+    if (!user.passwordResetToken || user.passwordResetToken !== hashedOTP) {
+      return res.status(400).json({ message: "Invalid or expired code" });
+    }
+
+    // Check expiry
+    if (!user.passwordResetExpires || user.passwordResetExpires < new Date()) {
+      return res.status(400).json({ message: "Code has expired. Request a new one." });
+    }
+
+    // Update password
+    user.password = newPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    res.json({ 
+      message: "Password reset successful. Please login with your new password." 
+    });
+  } catch (error: any) {
+    console.error("Password reset error:", error);
+    res.status(500).json({ message: "Error resetting password", error: error.message });
+  }
+};

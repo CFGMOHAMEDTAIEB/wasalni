@@ -165,3 +165,49 @@ export const getUserById = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Error fetching user", error: error.message });
   }
 };
+
+// Rate a driver after a completed ride
+export const rateDriver = async (req: AuthRequest, res: Response) => {
+  try {
+    const { stars, comment, rideId } = req.body;
+    const driverId = req.params.id;
+
+    // Validation
+    if (!stars || stars < 1 || stars > 5) {
+      return res.status(400).json({ message: "Rating stars must be between 1 and 5" });
+    }
+
+    if (!driverId) {
+      return res.status(400).json({ message: "Driver ID is required" });
+    }
+
+    const driver = await User.findById(driverId);
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
+    }
+
+    // Calculate new average rating
+    const currentTotal = driver.rating * driver.totalReviews;
+    const newTotal = currentTotal + stars;
+    const newReviewCount = driver.totalReviews + 1;
+    const newAverageRating = newTotal / newReviewCount;
+
+    // Update driver's rating
+    driver.rating = Math.round(newAverageRating * 10) / 10; // Round to 1 decimal
+    driver.totalReviews = newReviewCount;
+    await driver.save();
+
+    res.json({
+      message: "Rating submitted successfully",
+      rating: {
+        driverId: driver._id,
+        stars,
+        comment,
+        averageRating: driver.rating,
+        totalReviews: driver.totalReviews,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: "Error submitting rating", error: error.message });
+  }
+};

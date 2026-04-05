@@ -14,9 +14,12 @@ export interface IRide extends Document {
   };
   date: Date;
   departureTime: string;
+  meetingPoint?: string; // "Lieu de rendez-vous"
   totalSeats: number;
   seatsAvailable: number;
-  pricePerSeat: number;
+  pricePerSeat?: number; // Keep for backward compatibility
+  priceMode: 'free' | 'negotiable' | 'fixed'; // Price mode selector
+  priceAmount?: number; // Used when priceMode is 'fixed'
   vehicleType: string;
   vehicleDetails: {
     make: string;
@@ -26,6 +29,11 @@ export interface IRide extends Document {
   };
   description?: string;
   amenities: string[];
+  // Passenger comfort options (driver preferences)
+  allowSmoking?: 'no' | 'yes' | 'outside';
+  preferredSeats?: ('front' | 'back-left' | 'back-right' | 'back-middle')[];
+  maxLuggageItems?: number; // 0-5
+  maxLuggageDimension?: 'small' | 'medium' | 'large' | 'oversized';
   status: "active" | "completed" | "cancelled";
   isFeatured: boolean;
   bookedBy: mongoose.Types.ObjectId[];
@@ -48,9 +56,16 @@ const RideSchema = new Schema<IRide>(
     },
     date: { type: Date, required: true },
     departureTime: { type: String, required: true },
+    meetingPoint: { type: String }, // New field for pickup location
     totalSeats: { type: Number, required: true, min: 1, max: 8 },
     seatsAvailable: { type: Number, required: true },
-    pricePerSeat: { type: Number, required: true, min: 0 },
+    pricePerSeat: { type: Number, min: 0 },
+    priceMode: {
+      type: String,
+      enum: ['free', 'negotiable', 'fixed'],
+      default: 'fixed',
+    },
+    priceAmount: { type: Number, min: 0 }, // Used when priceMode is 'fixed'
     vehicleType: { type: String, required: true },
     vehicleDetails: {
       make: String,
@@ -60,6 +75,22 @@ const RideSchema = new Schema<IRide>(
     },
     description: String,
     amenities: [String],
+    // Passenger comfort options
+    allowSmoking: {
+      type: String,
+      enum: ['no', 'yes', 'outside'],
+      default: 'no',
+    },
+    preferredSeats: [{
+      type: String,
+      enum: ['front', 'back-left', 'back-right', 'back-middle'],
+    }],
+    maxLuggageItems: { type: Number, min: 0, max: 5, default: 2 },
+    maxLuggageDimension: {
+      type: String,
+      enum: ['small', 'medium', 'large', 'oversized'],
+      default: 'medium',
+    },
     status: {
       type: String,
       enum: ["active", "completed", "cancelled"],
@@ -74,5 +105,6 @@ const RideSchema = new Schema<IRide>(
 // Index for efficient searching
 RideSchema.index({ date: 1, status: 1 });
 RideSchema.index({ ownerId: 1 });
+RideSchema.index({ priceMode: 1 }); // For price filtering
 
 export default mongoose.model<IRide>("Ride", RideSchema);

@@ -6,6 +6,12 @@ export interface IBooking extends Document {
   driverId: mongoose.Types.ObjectId;
   seatsBooked: number;
   totalPrice: number;
+  // Passenger preferences
+  preferredSeat?: 'front' | 'back-left' | 'back-right' | 'back-middle';
+  luggageItems?: number; // 0-5
+  luggageDimension?: 'small' | 'medium' | 'large' | 'oversized';
+  specialLuggageRequest?: boolean;
+  passengeSmokePreference?: 'no' | 'yes' | 'outside';
   status: "pending" | "accepted" | "rejected" | "cancelled" | "completed";
   paymentStatus: "pending" | "completed" | "failed" | "refunded";
   rating?: number;
@@ -21,6 +27,21 @@ const BookingSchema = new Schema<IBooking>(
     driverId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     seatsBooked: { type: Number, required: true, min: 1 },
     totalPrice: { type: Number, required: true, min: 0 },
+    // Passenger comfort preferences
+    preferredSeat: {
+      type: String,
+      enum: ['front', 'back-left', 'back-right', 'back-middle'],
+    },
+    luggageItems: { type: Number, min: 0, max: 5 },
+    luggageDimension: {
+      type: String,
+      enum: ['small', 'medium', 'large', 'oversized'],
+    },
+    specialLuggageRequest: { type: Boolean, default: false },
+    passengeSmokePreference: {
+      type: String,
+      enum: ['no', 'yes', 'outside'],
+    },
     status: {
       type: String,
       enum: ["pending", "accepted", "rejected", "cancelled", "completed"],

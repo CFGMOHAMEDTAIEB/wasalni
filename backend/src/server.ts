@@ -46,7 +46,25 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Health check
 app.get("/health", (req: Request, res: Response) => {
-  res.json({ status: "OK", timestamp: new Date() });
+  try {
+    const mongoose = require("mongoose");
+    const dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+    const uptime = process.uptime();
+    
+    res.json({ 
+      status: "OK",
+      db: dbStatus,
+      uptime: Math.floor(uptime),
+      timestamp: new Date(),
+      environment: process.env.NODE_ENV || "development"
+    });
+  } catch (error: any) {
+    res.status(500).json({ 
+      status: "ERROR",
+      message: error.message,
+      timestamp: new Date()
+    });
+  }
 });
 
 // API Routes
