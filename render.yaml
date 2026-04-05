@@ -13,15 +13,11 @@ services:
       - key: MONGODB_URI
         value: mongodb+srv://taiebmohamed_db_user:6hYCiCBVByjoQFTf@cluster0.ycqw9dq.mongodb.net/wasalni?retryWrites=true&w=majority
       - key: JWT_SECRET
-        value: wasalni_prod_jwt_secret_2024_change_me
+        value: wasalni_jwt_sk_7d8f9e2c1b4a5x6y7z8w9v0u1t2s3r4q5p6o7n8m9l0k
       - key: JWT_REFRESH_SECRET
-        value: wasalni_prod_refresh_secret_2024_change_me
+        value: wasalni_refresh_sk_9k8j7i6h5g4f3e2d1c0b9a8z7y6x5w4v3u2t1s0r9q8p
       - key: FRONTEND_URL
         value: https://wasalni.vercel.app
-      - key: EMAIL_USER
-        value: your_email@gmail.com
-      - key: EMAIL_PASSWORD
-        value: your_app_password
       - key: CLOUDINARY_NAME
         value: your_cloudinary_name
       - key: CLOUDINARY_API_KEY
