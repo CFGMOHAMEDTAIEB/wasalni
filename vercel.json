@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "buildCommand": "cd \"Cross-platform ride-sharing app\" && npm run build",
+  "outputDirectory": "Cross-platform ride-sharing app/dist",
   "env": {
     "VITE_API_BASE_URL": "https://wasalni.onrender.com"
   }
