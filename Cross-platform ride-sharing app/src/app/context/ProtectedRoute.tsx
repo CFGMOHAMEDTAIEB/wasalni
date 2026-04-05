@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Navigate, useLocation } from 'react-router';
 import { useAuth, UserRole } from './AuthContext';
 
 interface ProtectedRouteProps {
@@ -12,45 +13,35 @@ export function ProtectedRoute({
   requiredRole,
   fallback,
 }: ProtectedRouteProps) {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const location = useLocation();
 
-  if (!requiredRole) {
-    // Only check if authenticated (not guest)
-    if (user?.role === 'guest') {
-      return fallback || <GuestOnlyView />;
-    }
-    return children;
+  // Not authenticated - redirect to login
+  if (!isAuthenticated || user?.role === 'guest') {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-  const hasAccess = user && roles.includes(user.role);
+  // Check role-based access
+  if (requiredRole) {
+    const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+    const hasAccess = user && roles.includes(user.role);
+    
+    if (!hasAccess) {
+      return fallback || <AccessDeniedView />;
+    }
+  }
 
-  return hasAccess ? children : fallback || <AccessDeniedView />;
-}
-
-function GuestOnlyView() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Please Sign In
-        </h2>
-        <p className="text-gray-600 mb-6">
-          You need to create an account or log in to access this feature.
-        </p>
-      </div>
-    </div>
-  );
+  return children;
 }
 
 function AccessDeniedView() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="text-center">
+      <div className="text-center max-w-md">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
           Access Denied
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 mb-6">
           You don't have permission to access this page.
         </p>
       </div>

@@ -1,81 +1,168 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Brand Colors - Professional Blue */
+  --brand-primary: #3b82f6;
+  --brand-primary-light: #60a5fa;
+  --brand-primary-dark: #1e40af;
+  --brand-secondary: #10b981;
+  --brand-accent: #f59e0b;
+  
+  /* Font Sizing */
   --font-size: 16px;
+  
+  /* Backgrounds & Foregrounds */
   --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
+  --background-secondary: #f9fafb;
+  --foreground: #111827;
+  --foreground-secondary: #6b7280;
+  
+  /* Cards */
   --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
+  --card-foreground: #111827;
+  
+  /* Popover */
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  
+  /* Primary Color */
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary Color */
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  
+  /* Muted */
+  --muted: #e5e7eb;
+  --muted-foreground: #6b7280;
+  
+  /* Accent */
+  --accent: #dbeafe;
+  --accent-foreground: #1e40af;
+  
+  /* Destructive */
+  --destructive: #ef4444;
+  --destructive-foreground: #fca5a5;
+  
+  /* Border & Input */
+  --border: #e5e7eb;
   --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
+  --input-background: #f9fafb;
+  --input-border: #d1d5db;
+  --switch-background: #d1d5db;
+  
+  /* Typography */
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Ring (Focus States) */
+  --ring: #3b82f6;
+  --ring-offset: 2px;
+  
+  /* Chart Colors */
+  --chart-1: #3b82f6;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #ef4444;
+  --chart-5: #8b5cf6;
+  
+  /* Radius */
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dbeafe;
+  --sidebar-accent-foreground: #1e40af;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #3b82f6;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Brand Colors - Professional Dark Blue */
+  --brand-primary: #60a5fa;
+  --brand-primary-light: #93c5fd;
+  --brand-primary-dark: #3b82f6;
+  --brand-secondary: #34d399;
+  --brand-accent: #fbbf24;
+  
+  /* Backgrounds & Foregrounds */
+  --background: #111827;
+  --background-secondary: #1f2937;
+  --foreground: #f3f4f6;
+  --foreground-secondary: #d1d5db;
+  
+  /* Cards */
+  --card: #1f2937;
+  --card-foreground: #f3f4f6;
+  
+  /* Popover */
+  --popover: #1f2937;
+  --popover-foreground: #f3f4f6;
+  
+  /* Primary Color */
+  --primary: #60a5fa;
+  --primary-foreground: #1f2937;
+  
+  /* Secondary Color */
+  --secondary: #374151;
+  --secondary-foreground: #f3f4f6;
+  
+  /* Muted */
+  --muted: #4b5563;
+  --muted-foreground: #9ca3af;
+  
+  /* Accent */
+  --accent: #1e3a8a;
+  --accent-foreground: #bfdbfe;
+  
+  /* Destructive */
+  --destructive: #f87171;
+  --destructive-foreground: #7f1d1d;
+  
+  /* Border & Input */
+  --border: #374151;
+  --input: #1f2937;
+  --input-background: #111827;
+  --input-border: #4b5563;
+  --switch-background: #4b5563;
+  
+  /* Ring (Focus States) */
+  --ring: #60a5fa;
+  
+  /* Chart Colors */
+  --chart-1: #60a5fa;
+  --chart-2: #34d399;
+  --chart-3: #fbbf24;
+  --chart-4: #f87171;
+  --chart-5: #c4b5fd;
+  
+  /* Sidebar */
+  --sidebar: #1f2937;
+  --sidebar-foreground: #f3f4f6;
+  --sidebar-primary: #60a5fa;
+  --sidebar-primary-foreground: #1f2937;
+  --sidebar-accent: #1e3a8a;
+  --sidebar-accent-foreground: #bfdbfe;
+  --sidebar-border: #374151;
+  --sidebar-ring: #60a5fa;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
 }
 
 @theme inline {

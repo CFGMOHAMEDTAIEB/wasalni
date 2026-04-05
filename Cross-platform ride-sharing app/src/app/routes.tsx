@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+import { ForgotPassword } from "./pages/ForgotPassword";
 import { SearchResults } from "./pages/SearchResults";
 import { RideDetails } from "./pages/RideDetails";
 import { PublishRide } from "./pages/PublishRide";
@@ -12,6 +14,14 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: Login,
+  },
+  {
+    path: "/register",
+    Component: Register,
+  },
+  {
+    path: "/forgot-password",
+    Component: ForgotPassword,
   },
   {
     path: "/",
