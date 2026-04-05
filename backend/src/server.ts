@@ -109,16 +109,29 @@ app.use((req: Request, res: Response) => {
 
 // Initialize server
 const startServer = async () => {
+  const PORT = process.env.PORT || 5000;
+  
   try {
-    // Connect to Database
-    await connectDB();
-    
-    const PORT = process.env.PORT || 5000;
-    
+    // Start listening immediately (don't wait for DB)
     httpServer.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
     });
+    
+    // Connect to Database in background with timeout
+    const dbTimeout = setTimeout(() => {
+      console.warn("⚠️  Database connection timeout - server operating without DB");
+    }, 5000);
+    
+    try {
+      await connectDB();
+      clearTimeout(dbTimeout);
+      console.log("✅ Database connected successfully");
+    } catch (dbError) {
+      clearTimeout(dbTimeout);
+      console.error("⚠️  Database connection failed:", dbError);
+      console.log("ℹ️  Server continuing without database connection");
+    }
   } catch (error) {
     console.error("❌ Failed to start server:", error);
     process.exit(1);
