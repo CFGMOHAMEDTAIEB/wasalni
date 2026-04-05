@@ -3,8 +3,8 @@ services:
     name: wasalni-backend
     runtime: node
     rootDir: backend
-    buildCommand: npm ci && npm run build
-    startCommand: node --max-old-space-size=256 dist/server.js
+    buildCommand: npm install && npm run build && echo "Build completed successfully"
+    startCommand: PORT=10000 node dist/server.js
     envVars:
       - key: NODE_ENV
         value: production
