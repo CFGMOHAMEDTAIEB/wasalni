@@ -119,7 +119,10 @@ export function Register() {
         formData.phone,
         formData.role
       );
+      // Small delay to ensure AuthContext state is fully updated
+      await new Promise(resolve => setTimeout(resolve, 100));
       // Auto-redirect to dashboard after successful registration
+      // The user is now logged in and the AuthContext is updated
       navigate('/dashboard', { replace: true });
     } catch (error: any) {
       setLocalError(error.message || 'Registration failed. Please try again.');

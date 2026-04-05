@@ -4,12 +4,17 @@ import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Ride } from "../data/mockData";
+import { useAuth } from "../context/AuthContext";
+import { AlertCircle } from "lucide-react";
 
 interface RideCardProps {
   ride: Ride;
 }
 
 export function RideCard({ ride }: RideCardProps) {
+  const { user } = useAuth();
+  const isGuest = user?.role === 'guest';
+  
   // Calculate commission (10% for regular, 5% for premium)
   const commission = ride.driver.premium ? ride.price * 0.05 : ride.price * 0.10;
   
@@ -103,9 +108,18 @@ export function RideCard({ ride }: RideCardProps) {
                   Commission: {commission.toFixed(2)} DT
                 </p>
               </div>
-              <Link to={`/ride/${ride.id}`}>
-                <Button>Réserver</Button>
-              </Link>
+              {isGuest ? (
+                <Link to="/login">
+                  <Button variant="outline" className="border-amber-600 text-amber-600 hover:bg-amber-50">
+                    <AlertCircle className="size-4 mr-1" />
+                    Se connecter
+                  </Button>
+                </Link>
+              ) : (
+                <Link to={`/ride/${ride.id}`}>
+                  <Button>Réserver</Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

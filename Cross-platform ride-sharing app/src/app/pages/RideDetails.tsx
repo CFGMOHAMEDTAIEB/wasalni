@@ -21,10 +21,14 @@ import {
 } from "lucide-react";
 import { mockRides } from "../data/mockData";
 import { toast } from "sonner";
+import { useAuth } from "../context/AuthContext";
+import { GuestPrompt } from "../components/GuestPrompt";
 
 export function RideDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isGuest = user?.role === 'guest';
   const ride = mockRides.find((r) => r.id === id);
 
   if (!ride) {
@@ -43,8 +47,25 @@ export function RideDetails() {
   const totalPrice = ride.price + commission;
 
   const handleBooking = () => {
+    if (isGuest) {
+      navigate('/login');
+      return;
+    }
     toast.success("Demande de réservation envoyée !", {
       description: `Le conducteur ${ride.driver.name} sera notifié de votre demande.`,
+    });
+  };
+
+  const handleContact = () => {
+    if (isGuest) {
+      toast.error('Connexion requise', {
+        description: 'Vous devez créer un compte pour contacter le conducteur.',
+      });
+      navigate('/login');
+      return;
+    }
+    toast.info('Nouveau message', {
+      description: `Message envoyé à ${ride.driver.name}`,
     });
   };
 
@@ -161,7 +182,12 @@ export function RideDetails() {
                       </span>
                     </div>
 
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleContact}
+                      disabled={isGuest}
+                    >
                       <MessageCircle className="size-4 mr-2" />
                       Contacter
                     </Button>
@@ -238,6 +264,13 @@ export function RideDetails() {
           <div className="md:col-span-1">
             <Card className="sticky top-24">
               <CardContent className="p-6">
+                {isGuest && (
+                  <GuestPrompt 
+                    title="Créez un compte pour réserver"
+                    description="Connectez-vous ou inscrivez-vous pour accéder à toutes les fonctionnalités."
+                    className="mb-4"
+                  />
+                )}
                 <div className="space-y-4">
                   <div>
                     <p className="text-3xl font-bold text-primary">
@@ -274,8 +307,13 @@ export function RideDetails() {
                     </span>
                   </div>
 
-                  <Button className="w-full" size="lg" onClick={handleBooking}>
-                    Réserver maintenant
+                  <Button 
+                    className="w-full" 
+                    size="lg" 
+                    onClick={handleBooking}
+                    disabled={isGuest}
+                  >
+                    {isGuest ? 'Connectez-vous pour réserver' : 'Réserver maintenant'}
                   </Button>
 
                   <p className="text-xs text-center text-muted-foreground">

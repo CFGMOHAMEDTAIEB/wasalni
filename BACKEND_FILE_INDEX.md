@@ -52,15 +52,21 @@ Cross-platform ride-sharing app/
 | `src/middleware/errorHandler.ts` | Error handling | Global error middleware |
 | `src/middleware/upload.ts` | File upload setup | uploadSingle, uploadMultiple |
 
-### Models (5 files - Database Schemas)
+### Models (10 files - Database Schemas)
 
-| Model | Fields | Purpose |
-|-------|--------|---------|
-| `src/models/User.ts` | 20 fields | User data + auth |
-| `src/models/Ride.ts` | 16 fields | Ride listings |
-| `src/models/Booking.ts` | 11 fields | Ride bookings/requests |
-| `src/models/Message.ts` | 6 fields | User-to-user messaging |
-| `src/models/Notification.ts` | 7 fields | Event notifications |
+| Model | Purpose | Module |
+|-------|---------|--------|
+| `src/models/User.ts` | User data + authentication | Core system |
+| `src/models/Ride.ts` | Ride listings & journeys | Ride-sharing |
+| `src/models/Booking.ts` | Passenger ride bookings | Ride-sharing |
+| `src/models/Message.ts` | User-to-user messaging | Chat system |
+| `src/models/Notification.ts` | Event notifications | Notification system |
+| `src/models/Parcel.ts` | Parcel/package delivery | Delivery service |
+| `src/models/Reclamation.ts` | User complaints & reports | Quality monitoring |
+| `src/models/ShoppingRequest.ts` | Shopping proxy requests | Shopping service |
+| `src/models/Louage.ts` | Fixed-route taxis | Intercity transport |
+| `src/models/PushSubscription.ts` | Web push subscriptions | Notifications |
+| `src/models/index.ts` | Central model exports | Utilities |
 
 ### Controllers (7 files - Business Logic)
 
@@ -141,9 +147,9 @@ Cross-platform ride-sharing app/
 ## 📊 File Statistics
 
 ### Code Files
-- **Total TypeScript Files:** 20+
+- **Total TypeScript Files:** 25+
 - **Controllers:** 7 files
-- **Models:** 5 files  
+- **Models:** 11 files  
 - **Routes:** 7 files
 - **Middleware:** 3 files
 - **Services:** 1 file

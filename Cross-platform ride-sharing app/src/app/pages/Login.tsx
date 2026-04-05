@@ -55,7 +55,11 @@ export function Login() {
     setIsAnimating(true);
     try {
       await loginWithAPI(email, password, role);
-      navigate('/dashboard', { replace: true });
+      // Small delay to ensure AuthContext state is fully updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+      // Navigate to dashboard or return to previous location
+      const from = (location.state as any)?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
     } catch (error: any) {
       setLocalError(error.message || 'Login failed. Please try again.');
     } finally {
