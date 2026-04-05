@@ -34,6 +34,17 @@ export interface IRide extends Document {
   preferredSeats?: ('front' | 'back-left' | 'back-right' | 'back-middle')[];
   maxLuggageItems?: number; // 0-5
   maxLuggageDimension?: 'small' | 'medium' | 'large' | 'oversized';
+  // Feature 1: Immediate mode (last-minute rides)
+  immediateMode?: boolean;
+  // Feature 2: Women-only rides
+  womenOnly?: boolean;
+  // Feature 10: Recurring rides
+  isRecurring?: boolean;
+  recurringDays?: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[];
+  recurringUntil?: Date;
+  recurringGroupId?: string; // Links all instances of a recurring ride
+  // Payment methods accepted by driver
+  paymentMethods?: ('cash' | 'wallet')[];
   status: "active" | "completed" | "cancelled";
   isFeatured: boolean;
   bookedBy: mongoose.Types.ObjectId[];
@@ -91,6 +102,19 @@ const RideSchema = new Schema<IRide>(
       enum: ['small', 'medium', 'large', 'oversized'],
       default: 'medium',
     },
+    immediateMode: { type: Boolean, default: false },
+    womenOnly: { type: Boolean, default: false },
+    isRecurring: { type: Boolean, default: false },
+    recurringDays: [{
+      type: String,
+      enum: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+    }],
+    recurringUntil: { type: Date },
+    recurringGroupId: { type: String },
+    paymentMethods: [{
+      type: String,
+      enum: ['cash', 'wallet'],
+    }],
     status: {
       type: String,
       enum: ["active", "completed", "cancelled"],
@@ -104,6 +128,9 @@ const RideSchema = new Schema<IRide>(
 
 // Index for efficient searching
 RideSchema.index({ date: 1, status: 1 });
+RideSchema.index({ immediateMode: 1, departureTime: 1 });
+RideSchema.index({ womenOnly: 1 });
+RideSchema.index({ recurringGroupId: 1 });
 RideSchema.index({ ownerId: 1 });
 RideSchema.index({ priceMode: 1 }); // For price filtering
 

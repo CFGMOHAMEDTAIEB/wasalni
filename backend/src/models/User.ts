@@ -16,6 +16,18 @@ export interface IUser extends Document {
   commissionRate: number;
   rating: number;
   totalReviews: number;
+  // Passenger ratings (mutual rating system)
+  passengerAverageRating?: number;
+  passengerTotalReviews?: number;
+  // Safety & preferences
+  gender?: 'male' | 'female' | 'prefer_not_to_say';
+  // Loyalty program
+  completedTrips?: number;
+  loyaltyTier?: 'bronze' | 'silver' | 'gold';
+  referralCode?: string;
+  referredBy?: mongoose.Types.ObjectId;
+  // Virtual wallet
+  walletBalance?: number;
   createdAt: Date;
   updatedAt: Date;
   // Authentication fields
@@ -63,6 +75,21 @@ const UserSchema = new Schema<IUser>(
     commissionRate: { type: Number, default: 0.1 }, // 10% by default, 5% if verified/premium
     rating: { type: Number, default: 0 },
     totalReviews: { type: Number, default: 0 },
+    passengerAverageRating: { type: Number, default: 0 },
+    passengerTotalReviews: { type: Number, default: 0 },
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'prefer_not_to_say'],
+    },
+    completedTrips: { type: Number, default: 0 },
+    loyaltyTier: {
+      type: String,
+      enum: ['bronze', 'silver', 'gold'],
+      default: 'bronze',
+    },
+    referralCode: { type: String, unique: true, sparse: true },
+    referredBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    walletBalance: { type: Number, default: 0 },
     emailVerificationToken: { type: String },
     emailVerificationExpires: { type: Date },
     passwordResetToken: { type: String },
@@ -86,6 +113,12 @@ const UserSchema = new Schema<IUser>(
   },
   { timestamps: true }
 );
+
+// Add indexes for new fields
+UserSchema.index({ loyaltyTier: 1 });
+UserSchema.index({ completedTrips: 1 });
+UserSchema.index({ referralCode: 1 });
+UserSchema.index({ gender: 1 });
 
 // Hash password before save
 UserSchema.pre("save", async function (next) {

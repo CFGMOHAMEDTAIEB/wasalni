@@ -12,6 +12,17 @@ export interface IBooking extends Document {
   luggageDimension?: 'small' | 'medium' | 'large' | 'oversized';
   specialLuggageRequest?: boolean;
   passengeSmokePreference?: 'no' | 'yes' | 'outside';
+  // Feature 5: Payment method
+  paymentMethod?: 'cash' | 'wallet';
+  // Feature 4: Mutual rating system
+  ratings?: Array<{
+    by: 'driver' | 'passenger';
+    stars: number;
+    comment?: string;
+    createdAt: Date;
+  }>;
+  // Feature 8: Eco-impact
+  co2Saved?: number; // grams of CO2 saved
   status: "pending" | "accepted" | "rejected" | "cancelled" | "completed";
   paymentStatus: "pending" | "completed" | "failed" | "refunded";
   rating?: number;
@@ -42,6 +53,20 @@ const BookingSchema = new Schema<IBooking>(
       type: String,
       enum: ['no', 'yes', 'outside'],
     },
+    paymentMethod: {
+      type: String,
+      enum: ['cash', 'wallet'],
+    },
+    ratings: [{
+      by: {
+        type: String,
+        enum: ['driver', 'passenger'],
+      },
+      stars: { type: Number, min: 1, max: 5 },
+      comment: String,
+      createdAt: { type: Date, default: Date.now },
+    }],
+    co2Saved: { type: Number, default: 0 },
     status: {
       type: String,
       enum: ["pending", "accepted", "rejected", "cancelled", "completed"],
@@ -61,5 +86,7 @@ const BookingSchema = new Schema<IBooking>(
 BookingSchema.index({ rideId: 1 });
 BookingSchema.index({ passengerId: 1 });
 BookingSchema.index({ driverId: 1 });
+BookingSchema.index({ status: 1, 'ratings.by': 1 }); // For finding unrated bookings
+BookingSchema.index({ paymentMethod: 1 });
 
 export default mongoose.model<IBooking>("Booking", BookingSchema);
