@@ -44,6 +44,15 @@ app.use(limiter);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+// Simple test endpoint (no DB required)
+app.get("/", (req: Request, res: Response) => {
+  res.json({ 
+    message: "Wasalni Backend is LIVE!",
+    version: "1.1.1",
+    status: "operational"
+  });
+});
+
 // Health check
 app.get("/health", (req: Request, res: Response) => {
   try {
